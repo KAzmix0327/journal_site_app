@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
 class ArticleController extends Controller
 {
@@ -71,7 +72,8 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $article = Article::find($id);
+        return view('articles.edit', ['article' => $article]);
     }
 
     /**
@@ -83,7 +85,18 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // インスタンスの作成
+        $article = Article::find($id);
+
+        // createから送った値を保存
+        $article->title = $request->title;
+        $article->body = $request->body;
+
+        // インスタンスに値を設定して保存
+        $article->save();
+
+        // 登録したらindexに戻る
+        return redirect('/articles');
     }
 
     /**
@@ -94,6 +107,11 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //インスタンスの作成(データ取得)
+        $article = article::find($id);
+        //データ削除
+        $article->delete();
+        
+        return redirect('/articles');
     }
 }
